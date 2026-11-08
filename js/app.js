@@ -24,9 +24,8 @@
   var cueToSection3 = document.getElementById('cueToSection3');
 
   var enterBtnText = document.getElementById('enterBtnText');
-  var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
   if (enterBtnText) {
-    enterBtnText.textContent = isTouchDevice ? 'Tap to Begin' : 'Click to Begin';
+    enterBtnText.textContent = 'निमंत्रण उघडण्यासाठी क्लिक करा';
   }
 
   var invocationText = document.getElementById('invocationText');
@@ -37,12 +36,10 @@
 
   var weddingMusic = document.getElementById('weddingMusic');
 
-  // Audio
   if (weddingMusic && weddingMusic.load) {
     try { weddingMusic.load(); } catch (e) {}
   }
 
-  // --- SECTION 1 STEP-BY-STEP REVEAL: Wait for BG image + exact Google Fonts before revealing text ---
   var coverDateSection = document.getElementById('coverDateSection');
   var isCoverRevealed = false;
 
@@ -56,14 +53,12 @@
     if (isCoverRevealed || !stageCover) return;
     isCoverRevealed = true;
 
-    // Step 1: Background is already visible; pause briefly (180ms) so the guest sees the clean royal background first
     setTimeout(function () {
       stageCover.classList.add('is-revealed');
       if (cueToSection2) {
         cueToSection2.classList.add('is-revealed');
       }
 
-      // Step 2: Reveal the date box 700ms after the main names/title curtain wipe begins
       setTimeout(revealCoverDate, 700);
 
       setTimeout(function () {
@@ -81,21 +76,21 @@
   function waitForCoverAssetsAndFonts() {
     var promises = [];
 
-    // 1. Explicitly force-load the exact Section 1 Google Fonts so raw fallback text NEVER flashes
     if (document.fonts && document.fonts.load) {
       promises.push(
         Promise.all([
-          document.fonts.load('400 4rem "Italianno"'),
-          document.fonts.load('700 1rem "Cinzel"'),
-          document.fonts.load('600 1rem "Cinzel"'),
-          document.fonts.load('italic 500 1rem "Cormorant Garamond"')
+          document.fonts.load('800 4rem "Noto Serif Devanagari"').catch(function () {}),
+          document.fonts.load('400 4rem "Rozha One"').catch(function () {}),
+          document.fonts.load('400 4rem "Yatra One"').catch(function () {}),
+          document.fonts.load('700 1rem "Cinzel"').catch(function () {}),
+          document.fonts.load('600 1rem "Cinzel"').catch(function () {}),
+          document.fonts.load('italic 500 1rem "Cormorant Garamond"').catch(function () {})
         ]).then(function () {
           return document.fonts.ready;
         }).catch(function () {})
       );
     }
 
-    // 2. Ensure the background image is loaded first so Step 1 (Background) is crisp
     promises.push(new Promise(function (resolve) {
       var bgImg = new Image();
       bgImg.onload = resolve;
@@ -105,7 +100,6 @@
 
     Promise.all(promises).then(revealCoverSection).catch(revealCoverSection);
 
-    // Safety fallback (3.5s max) in case of a very slow mobile connection
     setTimeout(revealCoverSection, 3500);
   }
 
@@ -158,7 +152,6 @@
 
   setMusicButtonState(false);
 
-  // Audio events
   if (weddingMusic) {
     weddingMusic.addEventListener('playing', function () {
       if (shouldPlayMusic && !userMuted) {
@@ -173,7 +166,6 @@
     });
   }
 
-  // Audio unlock
   function unlockAudioOnFirstTouch() {
     if (audioUnlocked || !weddingMusic || musicStarted || userMuted) return;
 
@@ -282,7 +274,6 @@
     });
   }
 
-  // Gestures
   function onUserActivationGesture(e) {
     if (musicToggleBtn && e && e.target && (e.target === musicToggleBtn || musicToggleBtn.contains(e.target))) {
       return;
@@ -322,6 +313,14 @@
     if (typewriterStarted) return;
     typewriterStarted = true;
 
+    if (stageCover) {
+      stageCover.style.opacity = '0';
+      stageCover.style.pointerEvents = 'none';
+      stageCover.style.display = 'none';
+      stageCover.style.visibility = 'hidden';
+      stageCover.classList.add('is-hidden');
+    }
+
     var chars1 = getGraphemes(SHLOKA_1);
     var chars2 = getGraphemes(SHLOKA_2);
 
@@ -333,6 +332,8 @@
     if (shlokaLine2) shlokaLine2.textContent = '';
     
     if (typeCursor) {
+      typeCursor.style.display = 'none';
+      typeCursor.classList.remove('is-typing');
       typeCursor.classList.remove('done');
       if (shlokaLine1) {
         shlokaLine1.appendChild(typeCursor);
@@ -340,6 +341,10 @@
     }
 
     function typeLine1() {
+      if (typeCursor && !typeCursor.classList.contains('is-typing')) {
+        typeCursor.style.display = '';
+        typeCursor.classList.add('is-typing');
+      }
       if (idx1 < chars1.length) {
         var ch = chars1[idx1++];
         if (typeCursor && typeCursor.parentNode === shlokaLine1) {
@@ -369,12 +374,16 @@
         setTimeout(typeLine2, speed);
       } else {
         setTimeout(function () {
-          if (typeCursor) typeCursor.classList.add('done');
+          if (typeCursor) {
+            typeCursor.classList.remove('is-typing');
+            typeCursor.classList.add('done');
+            typeCursor.style.display = 'none';
+          }
         }, 1200);
       }
     }
 
-    setTimeout(typeLine1, 300);
+    setTimeout(typeLine1, 350);
   }
 
   var minAllowedTop = 0;
@@ -442,13 +451,22 @@
         section2UnlockedAt = Date.now() + 200;
         if (musicToggleBtn) musicToggleBtn.classList.add('is-active');
         startMusic();
+        if (stageCover) {
+          stageCover.style.opacity = '0';
+          stageCover.style.pointerEvents = 'none';
+          stageCover.style.display = 'none';
+          stageCover.style.visibility = 'hidden';
+          stageCover.classList.add('is-hidden');
+        }
         if (stageLanding) {
           stageLanding.style.opacity = '1';
           stageLanding.style.pointerEvents = 'auto';
           stageLanding.style.transform = 'none';
           stageLanding.style.clipPath = 'none';
         }
-        startTypewriterSequence();
+        setTimeout(function () {
+          startTypewriterSequence();
+        }, 220);
       } else if (targetSec === 3) {
         minAllowedTop = h * 2;
         if (musicToggleBtn) musicToggleBtn.classList.add('is-active');
@@ -539,7 +557,6 @@
         return;
       }
 
-      // Section 1
       if (minAllowedTop === 0) {
         if (e.cancelable) e.preventDefault();
         return;
@@ -598,7 +615,6 @@
       return;
     }
 
-    // Section 1
     if (minAllowedTop === 0) {
       if (e.cancelable) e.preventDefault();
       return;
@@ -702,6 +718,9 @@
         var pCover = p / 0.40;
         var wipeCover = (pCover * 100).toFixed(2);
 
+        stageCover.style.display = 'flex';
+        stageCover.style.visibility = 'visible';
+        stageCover.classList.remove('is-hidden');
         stageCover.style.opacity = Math.max(0, 1 - pCover).toFixed(3);
         stageCover.style.clipPath = 'inset(0 0 ' + wipeCover + '% 0)';
         stageCover.style.webkitClipPath = 'inset(0 0 ' + wipeCover + '% 0)';
@@ -716,6 +735,9 @@
       } else if (p > 0.40 && p <= 0.48) {
         stageCover.style.opacity = '0';
         stageCover.style.pointerEvents = 'none';
+        stageCover.style.display = 'none';
+        stageCover.style.visibility = 'hidden';
+        stageCover.classList.add('is-hidden');
 
         stageLanding.style.opacity = '0';
         stageLanding.style.pointerEvents = 'none';
@@ -725,6 +747,9 @@
       } else {
         stageCover.style.opacity = '0';
         stageCover.style.pointerEvents = 'none';
+        stageCover.style.display = 'none';
+        stageCover.style.visibility = 'hidden';
+        stageCover.classList.add('is-hidden');
 
         var pLanding = (p - 0.48) / 0.52;
         var wipeLanding = ((1 - pLanding) * 100).toFixed(2);
@@ -737,6 +762,13 @@
       }
 
       if (p >= 0.99) {
+        if (stageCover) {
+          stageCover.style.opacity = '0';
+          stageCover.style.pointerEvents = 'none';
+          stageCover.style.display = 'none';
+          stageCover.style.visibility = 'hidden';
+          stageCover.classList.add('is-hidden');
+        }
         stageLanding.style.opacity = '1';
         stageLanding.style.clipPath = 'none';
         stageLanding.style.webkitClipPath = 'none';
@@ -761,7 +793,7 @@
         }
       }
 
-      if (p >= 0.96 && !typewriterStarted) {
+      if (p >= 0.995 && !typewriterStarted) {
         startTypewriterSequence();
       }
 
@@ -771,6 +803,9 @@
       if (stageCover) {
         stageCover.style.opacity = '0';
         stageCover.style.pointerEvents = 'none';
+        stageCover.style.display = 'none';
+        stageCover.style.visibility = 'hidden';
+        stageCover.classList.add('is-hidden');
       }
 
       if (pinnedStage) {
