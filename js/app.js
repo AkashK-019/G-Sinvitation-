@@ -208,7 +208,6 @@
     }
 
     if (!weddingMusic.paused) {
-      try { weddingMusic.currentTime = 0; } catch (e) {}
       audioUnlocked = true;
       musicStarted = true;
       musicStarting = false;
@@ -232,7 +231,6 @@
       }).catch(function () {
         musicStarted = false;
         musicStarting = false;
-        setMusicButtonState(true);
       });
     } else {
       musicStarted = true;
@@ -245,32 +243,41 @@
   if (musicToggleBtn && weddingMusic) {
     musicToggleBtn.addEventListener('click', function (e) {
       e.stopPropagation();
-      var isAudioActive = !weddingMusic.paused && weddingMusic.volume > 0.05 && !userMuted;
-      if (isAudioActive) {
-        userMuted = true;
-        musicStarted = false;
-        setMusicButtonState(true);
-        fadeTo(0, 300, function () {
-          weddingMusic.pause();
-        });
-      } else {
+      e.preventDefault();
+
+      if (userMuted || weddingMusic.paused) {
         userMuted = false;
         shouldPlayMusic = true;
         setMusicButtonState(false);
-        weddingMusic.volume = 0;
-        weddingMusic.play().then(function () {
-          audioUnlocked = true;
+        weddingMusic.volume = VOLUME;
+        var p = weddingMusic.play();
+        if (p && p.then) {
+          p.then(function () {
+            musicStarted = true;
+            audioUnlocked = true;
+          }).catch(function () {
+            setMusicButtonState(true);
+          });
+        } else {
           musicStarted = true;
-          fadeTo(VOLUME, 600);
-        }).catch(function () {
-          setMusicButtonState(true);
+          audioUnlocked = true;
+        }
+      } else {
+        userMuted = true;
+        musicStarted = false;
+        setMusicButtonState(true);
+        fadeTo(0, 250, function () {
+          weddingMusic.pause();
         });
       }
     });
   }
 
   // Gestures
-  function onUserActivationGesture() {
+  function onUserActivationGesture(e) {
+    if (musicToggleBtn && e && e.target && (e.target === musicToggleBtn || musicToggleBtn.contains(e.target))) {
+      return;
+    }
     if (userMuted) return;
     if (shouldPlayMusic) {
       if (weddingMusic && (weddingMusic.paused || weddingMusic.volume < 0.05)) {
