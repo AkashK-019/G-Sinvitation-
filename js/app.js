@@ -36,8 +36,9 @@
     try { weddingMusic.load(); } catch (e) {}
   }
 
-  // Section 1
+  // --- SECTION 1 STEP-BY-STEP REVEAL: Wait for BG image + exact Google Fonts before revealing text ---
   var coverDateSection = document.getElementById('coverDateSection');
+  var isCoverRevealed = false;
 
   function revealCoverDate() {
     if (coverDateSection) {
@@ -46,30 +47,60 @@
   }
 
   function revealCoverSection() {
-    if (!stageCover || stageCover.classList.contains('is-revealed')) return;
-    stageCover.classList.add('is-revealed');
+    if (isCoverRevealed || !stageCover) return;
+    isCoverRevealed = true;
 
-    setTimeout(revealCoverDate, 700);
-
+    // Step 1: Background is already visible; pause briefly (180ms) so the guest sees the clean royal background first
     setTimeout(function () {
-      if (stageCover) {
-        var content = stageCover.querySelector('.cover-content');
-        if (content) {
-          content.style.clipPath = 'none';
-          content.style.webkitClipPath = 'none';
+      stageCover.classList.add('is-revealed');
+
+      // Step 2: Reveal the date box 700ms after the main names/title curtain wipe begins
+      setTimeout(revealCoverDate, 700);
+
+      setTimeout(function () {
+        if (stageCover) {
+          var content = stageCover.querySelector('.cover-content');
+          if (content) {
+            content.style.clipPath = 'none';
+            content.style.webkitClipPath = 'none';
+          }
         }
-      }
-    }, 1400);
+      }, 1400);
+    }, 180);
   }
 
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function () {
-      setTimeout(revealCoverSection, 60);
-    }).catch(revealCoverSection);
-    setTimeout(revealCoverSection, 700);
-  } else {
-    setTimeout(revealCoverSection, 120);
+  function waitForCoverAssetsAndFonts() {
+    var promises = [];
+
+    // 1. Explicitly force-load the exact Section 1 Google Fonts so raw fallback text NEVER flashes
+    if (document.fonts && document.fonts.load) {
+      promises.push(
+        Promise.all([
+          document.fonts.load('400 4rem "Italianno"'),
+          document.fonts.load('700 1rem "Cinzel"'),
+          document.fonts.load('600 1rem "Cinzel"'),
+          document.fonts.load('italic 500 1rem "Cormorant Garamond"')
+        ]).then(function () {
+          return document.fonts.ready;
+        }).catch(function () {})
+      );
+    }
+
+    // 2. Ensure the background image is loaded first so Step 1 (Background) is crisp
+    promises.push(new Promise(function (resolve) {
+      var bgImg = new Image();
+      bgImg.onload = resolve;
+      bgImg.onerror = resolve;
+      bgImg.src = 'https://ik.imagekit.io/greenspire/invitation/main-bg.avif';
+    }));
+
+    Promise.all(promises).then(revealCoverSection).catch(revealCoverSection);
+
+    // Safety fallback (3.5s max) in case of a very slow mobile connection
+    setTimeout(revealCoverSection, 3500);
   }
+
+  waitForCoverAssetsAndFonts();
 
   var progressBar = document.getElementById('progressBar');
   var progressIndicator = document.getElementById('progressIndicator');
@@ -633,7 +664,7 @@
         pinnedStage.style.pointerEvents = 'none';
       }
 
-      if (cueToSection2) {
+      if (cueToSection2 && isCoverRevealed) {
         var cueOp1 = Math.max(0, 1 - p * 4);
         cueToSection2.style.opacity = cueOp1.toFixed(3);
         cueToSection2.style.pointerEvents = cueOp1 > 0.1 ? 'auto' : 'none';

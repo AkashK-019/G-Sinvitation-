@@ -13,11 +13,21 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://ik.imagekit.io">
-  <link rel="preload" as="image" href="https://ik.imagekit.io/greenspire/invitation/main-bg.avif">
+  <link rel="preload" as="image" href="https://ik.imagekit.io/greenspire/invitation/main-bg.avif" fetchpriority="high">
   <link rel="preload" as="image" href="https://ik.imagekit.io/greenspire/invitation/ganpati-logo.avif">
   <link rel="preload" as="image" href="https://ik.imagekit.io/greenspire/invitation/couple.webp">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Italianno&family=Tiro+Devanagari+Marathi:ital@0;1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=106">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Italianno&family=Tiro+Devanagari+Marathi:ital@0;1&display=block" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=107">
+
+  <!-- Inline critical CSS so Section 1 text is 100% hidden until bg + Google Fonts are ready -->
+  <style>
+    .stage-cover:not(.is-revealed) .cover-content,
+    .stage-cover:not(.is-revealed) .cover-date-section,
+    .stage-cover:not(.is-revealed) .scroll-cue-btn {
+      opacity: 0 !important;
+      visibility: hidden !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -264,7 +274,7 @@
   </div>
 
   <audio id="weddingMusic" src="https://ik.imagekit.io/greenspire/invitation/music%202.mp3" loop preload="auto" playsinline></audio>
-  <button type="button" class="music-toggle-btn muted" id="musicToggleBtn" aria-label="Turn music on">
+  <button type="button" class="music-toggle-btn" id="musicToggleBtn" aria-label="Turn music off">
     <svg class="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>
     </svg>
@@ -274,6 +284,6 @@
   </button>
 
   <script src="js/config.js"></script>
-  <script src="js/app.js?v=106"></script>
+  <script src="js/app.js?v=107"></script>
 </body>
 </html>
