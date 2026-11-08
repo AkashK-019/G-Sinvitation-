@@ -139,6 +139,19 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
               -webkit-clip-path 1.15s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+.enter-ceremony-btn {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .75s ease .35s, transform .25s ease;
+}
+
+.enter-ceremony-btn.is-revealed {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto !important;
+}
+
 .stage-cover .scroll-cue-btn {
   opacity: 0;
   pointer-events: none;
@@ -152,7 +165,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
 }
 
 .stage-cover.is-revealed .scroll-cue-btn {
-  opacity: .85;
+  opacity: 1;
   pointer-events: auto;
 }
 
@@ -337,7 +350,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
 }
 
 .ganpati-icon {
-  width: clamp(105px, 32cqw, 155px);
+  width: clamp(96px, 28cqw, 142px);
   margin-bottom: .1rem;
   flex-shrink: 0;
 }
@@ -350,19 +363,21 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
 
 .ganpati-title {
   height: 1.35em;
-  font-size: clamp(1.05rem, 4.3cqw, 1.45rem);
+  font-size: clamp(0.96rem, 3.8cqw, 1.25rem);
   color: var(--maroon-deep);
   font-weight: 700;
   letter-spacing: .06em;
-  line-height: 1.15;
+  line-height: 1.25;
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.95);
-  margin: 0 0 .1rem 0;
+  margin: .15rem 0 .05rem 0;
   white-space: nowrap;
   display: block;
 }
 
 .lotus-divider {
-  width: clamp(135px, 40cqw, 195px);
+  width: clamp(115px, 34cqw, 160px);
+  margin-top: 0;
+  margin-bottom: 0;
   flex-shrink: 0;
 }
 
@@ -430,6 +445,57 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
   height: auto;
   display: block;
   filter: drop-shadow(0 10px 28px rgba(36, 21, 13, 0.2));
+}
+
+.enter-ceremony-btn {
+  position: absolute;
+  bottom: clamp(2.4rem, 7.8vh, 3.8rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.85rem;
+  background: linear-gradient(135deg, rgba(255, 252, 247, 0.96) 0%, rgba(248, 239, 224, 0.92) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid #C9A048;
+  border-radius: 999px;
+  box-shadow: 0 4px 18px rgba(124, 88, 26, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.75) inset;
+  color: #631622;
+  font-family: var(--cinzel);
+  font-size: clamp(0.72rem, 2.8cqw, 0.86rem);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  cursor: pointer;
+  z-index: 50;
+  pointer-events: auto !important;
+  white-space: nowrap;
+  animation: enterBtnPulse 2.8s ease-in-out infinite;
+  transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9);
+}
+
+.enter-ceremony-btn:hover {
+  background: #FFFDF9;
+  border-color: #9E762E;
+  color: #7C1725;
+  transform: translateX(-50%) translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(124, 88, 26, 0.32), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+}
+
+.enter-ceremony-btn:active {
+  transform: translateX(-50%) scale(0.97);
+}
+
+@keyframes enterBtnPulse {
+  0%, 100% {
+    box-shadow: 0 4px 16px rgba(181, 136, 60, 0.22), 0 0 0 0 rgba(181, 136, 60, 0);
+  }
+  50% {
+    box-shadow: 0 6px 22px rgba(181, 136, 60, 0.38), 0 0 0 5px rgba(181, 136, 60, 0.14);
+  }
 }
 
 .scroll-cue-btn {
@@ -671,7 +737,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
 
 .hero-names {
   font-family: var(--serif);
-  font-size: clamp(2.4rem, 10.8cqw, 3.8rem);
+  font-size: clamp(2.9rem, 13.0cqw, 4.5rem);
   letter-spacing: .01em;
   color: #631622;
   font-weight: 600;
@@ -691,7 +757,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
 
 .hero-names .amp {
   font-family: var(--script);
-  font-size: clamp(2.0rem, 8.8cqw, 3.2rem);
+  font-size: clamp(2.4rem, 10.5cqw, 3.8rem);
   color: #B5883C;
   font-weight: 400;
   font-style: normal;
@@ -1209,6 +1275,12 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
     font-weight: 600 !important;
   }
 
+  .enter-ceremony-btn {
+    bottom: 2.2rem !important;
+    padding: 0.58rem 1.45rem !important;
+    font-size: 0.74rem !important;
+  }
+
   .scroll-cue-btn {
     bottom: 1.0rem !important;
     font-size: 0.72rem !important;
@@ -1246,6 +1318,84 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
 
   .couple-card {
     width: 285px !important;
+  }
+}
+
+@media (min-width: 601px) {
+  :root {
+    --cw: min(92vw, 470px, calc((100vh - 2rem) / 1.7778));
+  }
+
+  /* Section 1 Desktop Typography */
+  .stage-cover {
+    padding: 3.6rem 2.0rem 4.0rem;
+  }
+
+  .cover-header-title {
+    font-size: 1.08rem;
+    letter-spacing: 0.20em;
+    word-spacing: 0.24em;
+    margin-top: clamp(4.4rem, 11cqw, 6.0rem);
+    margin-bottom: 1.4rem;
+  }
+
+  .script-title-name {
+    font-size: 5.2rem;
+    line-height: 0.94;
+  }
+
+  .script-amp-symbol {
+    font-size: 3.1rem;
+  }
+
+  .cover-tagline-text {
+    margin-bottom: 1.6rem;
+    gap: 0.22rem;
+  }
+
+  .cover-tagline-text p {
+    font-size: 1.15rem;
+    line-height: 1.5;
+  }
+
+  .cover-date-section {
+    max-width: 90%;
+    gap: 0.8rem;
+  }
+
+  .date-clean-box {
+    padding: 0.52rem 1.85rem;
+  }
+
+  .date-clean-text {
+    font-size: 1.12rem;
+    letter-spacing: 0.26em;
+    margin-left: 0.26em;
+  }
+
+  .enter-ceremony-btn {
+    bottom: 3.2rem;
+    padding: 0.68rem 2.0rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.24em;
+  }
+
+  /* Section 2 Ganpati logo matching Section 3 in size and initial vertical offset */
+  .stage-landing {
+    justify-content: flex-start;
+    padding: clamp(4.6rem, 22vh, 7.2rem) 1.2rem 2.0rem;
+  }
+
+  .ganpati-icon {
+    width: clamp(96px, 28cqw, 142px);
+  }
+
+  .ganpati-title {
+    font-size: clamp(0.96rem, 3.8cqw, 1.25rem);
+  }
+
+  .lotus-divider {
+    width: clamp(115px, 34cqw, 160px);
   }
 }
 

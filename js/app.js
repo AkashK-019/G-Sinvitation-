@@ -23,6 +23,12 @@
   var cueToSection2 = document.getElementById('cueToSection2');
   var cueToSection3 = document.getElementById('cueToSection3');
 
+  var enterBtnText = document.getElementById('enterBtnText');
+  var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+  if (enterBtnText) {
+    enterBtnText.textContent = isTouchDevice ? 'Tap to Begin' : 'Click to Begin';
+  }
+
   var invocationText = document.getElementById('invocationText');
   var shlokaBox = document.getElementById('shlokaBox');
   var shlokaLine1 = document.getElementById('shlokaLine1');
@@ -53,6 +59,9 @@
     // Step 1: Background is already visible; pause briefly (180ms) so the guest sees the clean royal background first
     setTimeout(function () {
       stageCover.classList.add('is-revealed');
+      if (cueToSection2) {
+        cueToSection2.classList.add('is-revealed');
+      }
 
       // Step 2: Reveal the date box 700ms after the main names/title curtain wipe begins
       setTimeout(revealCoverDate, 700);
@@ -412,7 +421,7 @@
   var section2UnlockedAt = 0;
 
   function advanceToSection(targetSec) {
-    if (!mainScroller) return;
+    if (!mainScroller || isAutoScrolling) return;
     var h = mainScroller.clientHeight || window.innerHeight;
     var targetTop = (targetSec - 1) * h;
     
@@ -420,6 +429,9 @@
     var duration = targetSec === 2 ? (isMobile ? 1400 : 1350) : (isMobile ? 1200 : 1050); 
 
     if (targetSec === 2) {
+      if (cueToSection2) {
+        cueToSection2.style.pointerEvents = 'none';
+      }
       section2UnlockedAt = Date.now() + duration + 200;
       startMusic();
     }
@@ -455,24 +467,32 @@
     });
   }
 
-  if (cueToSection2 && mainScroller) {
-    cueToSection2.addEventListener('click', function (e) {
-      e.stopPropagation();
+  if (cueToSection2) {
+    var hasBegun = false;
+    function triggerBegin(e) {
+      if (hasBegun) return;
+      hasBegun = true;
+      if (e) {
+        e.stopPropagation();
+        if (e.cancelable) e.preventDefault();
+      }
       startMusic();
       advanceToSection(2);
-    });
+    }
+
+    cueToSection2.addEventListener('click', triggerBegin);
+    cueToSection2.addEventListener('touchend', triggerBegin);
     cueToSection2.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        startMusic();
-        advanceToSection(2);
+        triggerBegin(e);
       }
     });
   }
 
-  if (stageCover && mainScroller) {
+  if (stageCover) {
     stageCover.addEventListener('click', function (e) {
-      if (minAllowedTop === 0 && (!mainScroller || mainScroller.scrollTop < 20)) {
+      if (minAllowedTop === 0) {
         startMusic();
         advanceToSection(2);
       }
@@ -519,11 +539,9 @@
         return;
       }
 
-      // Section 1-2
-      if (touchStartSection === 1 && minAllowedTop === 0 && deltaY < -8 && !isAutoScrolling) {
+      // Section 1
+      if (minAllowedTop === 0) {
         if (e.cancelable) e.preventDefault();
-        startMusic();
-        advanceToSection(2);
         return;
       } else if (touchStartSection === 2 && h > 0 && minAllowedTop === h) {
         if (deltaY < -6) {
@@ -580,13 +598,9 @@
       return;
     }
 
-    // Wheel
+    // Section 1
     if (minAllowedTop === 0) {
-      if (delta > 0) {
-        if (e.cancelable) e.preventDefault();
-        startMusic();
-        advanceToSection(2);
-      }
+      if (e.cancelable) e.preventDefault();
       return;
     }
 
@@ -620,10 +634,7 @@
     if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
       if (minAllowedTop === 0) {
         e.preventDefault();
-        if (!isAutoScrolling) {
-          startMusic();
-          advanceToSection(2);
-        }
+        return;
       } else if (h > 0 && minAllowedTop === h) {
         e.preventDefault();
         if (!isAutoScrolling && Date.now() >= section2UnlockedAt) {
@@ -650,6 +661,11 @@
       top = minAllowedTop;
     }
 
+    if (minAllowedTop === 0 && !isAutoScrolling && top > 0) {
+      mainScroller.scrollTop = 0;
+      top = 0;
+    }
+
     if (minAllowedTop === h && top > h + 5 && !isAutoScrolling && Date.now() >= section2UnlockedAt) {
       advanceToSection(3);
       return;
@@ -671,10 +687,15 @@
         pinnedStage.style.pointerEvents = 'none';
       }
 
-      if (cueToSection2 && isCoverRevealed) {
-        var cueOp1 = Math.max(0, 1 - p * 4);
+      if (cueToSection2) {
+        var cueOp1 = Math.max(0, 1 - p * 3);
         cueToSection2.style.opacity = cueOp1.toFixed(3);
         cueToSection2.style.pointerEvents = cueOp1 > 0.1 ? 'auto' : 'none';
+        if (p >= 0.95) {
+          cueToSection2.style.display = 'none';
+        } else {
+          cueToSection2.style.display = 'inline-flex';
+        }
       }
 
       if (p <= 0.40) {
