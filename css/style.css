@@ -123,7 +123,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
   z-index: 3;
 }
 
-.cover-content {
+.stage-cover .cover-content {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -131,6 +131,29 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
   width: 100%;
   max-width: 90%;
   will-change: opacity, clip-path;
+  opacity: 0;
+  clip-path: inset(0 0 100% 0);
+  -webkit-clip-path: inset(0 0 100% 0);
+  transition: opacity 1.15s cubic-bezier(0.22, 1, 0.36, 1), 
+              clip-path 1.15s cubic-bezier(0.22, 1, 0.36, 1), 
+              -webkit-clip-path 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.stage-cover .scroll-cue-btn {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .75s ease .35s, transform .25s ease;
+}
+
+.stage-cover.is-revealed .cover-content {
+  opacity: 1;
+  clip-path: inset(0 0 0% 0);
+  -webkit-clip-path: inset(0 0 0% 0);
+}
+
+.stage-cover.is-revealed .scroll-cue-btn {
+  opacity: .85;
+  pointer-events: auto;
 }
 
 .cover-header-title {
@@ -239,6 +262,14 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
   width: 100%;
   max-width: 90%;
   gap: 0.7rem;
+  opacity: 0;
+  transform: translateY(14px) scale(0.96);
+  transition: opacity 1.0s cubic-bezier(0.22, 1, 0.36, 1), transform 1.0s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cover-date-section.is-revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 .date-side-rule {
@@ -527,7 +558,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
   filter: drop-shadow(0 1px 2px rgba(124, 88, 26, 0.22));
 }
 
-/* The reel — mask dissolves text into background at top and bottom edges (as in nsinvite) */
+/* Reel */
 .invitation-reel {
   position: absolute;
   inset: 0;
@@ -573,7 +604,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
   text-align: center;
 }
 
-/* REDESIGNED SECTION 3: REFINED BESPOKE TYPOGRAPHY (INSPIRED BY NSINVITE) */
+/* Section 3 */
 .invitation-section {
   width: 100%;
   display: flex;
@@ -583,7 +614,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
   text-align: center;
 }
 
-/* Kinetic Shrink on Scroll in Fade Zone */
+/* Kinetic Scroll */
 .hero-eyebrow,
 .hero-names,
 .hero-line,
@@ -722,7 +753,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.85);
 }
 
-/* Distinct Royal Dividers */
+/* Dividers */
 .divider-royal {
   display: flex;
   align-items: center;
@@ -798,7 +829,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.95);
 }
 
-/* Families */
+/* Family */
 .family {
   width: 100%;
   display: flex;
@@ -846,7 +877,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
   margin-top: .3rem;
 }
 
-/* Reception Meta */
+/* Reception */
 .reception-meta-box {
   display: flex;
   flex-direction: column;
@@ -907,7 +938,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.85);
 }
 
-/* Venue & Directions - Organic, Box-Free Presentation */
+/* Venue */
 .venue-section {
   margin-top: 0.2rem;
 }
@@ -921,7 +952,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
   text-align: center;
 }
 
-/* Proper Royal Address Box */
+/* Address */
 .venue-address-box {
   width: 100%;
   max-width: 90%;
@@ -984,7 +1015,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
   letter-spacing: 0.02em;
 }
 
-/* Compact Live Google Map Frame */
+/* Map */
 .venue-map-frame {
   width: 100%;
   max-width: 90%;

@@ -29,98 +29,230 @@
   var shlokaLine2 = document.getElementById('shlokaLine2');
   var typeCursor = document.getElementById('typeCursor');
 
-  // Prime audio buffer
+  var weddingMusic = document.getElementById('weddingMusic');
+
+  // Audio
   if (weddingMusic && weddingMusic.load) {
     try { weddingMusic.load(); } catch (e) {}
+  }
+
+  // Section 1
+  var coverDateSection = document.getElementById('coverDateSection');
+
+  function revealCoverDate() {
+    if (coverDateSection) {
+      coverDateSection.classList.add('is-revealed');
+    }
+  }
+
+  function revealCoverSection() {
+    if (!stageCover || stageCover.classList.contains('is-revealed')) return;
+    stageCover.classList.add('is-revealed');
+
+    setTimeout(revealCoverDate, 700);
+
+    setTimeout(function () {
+      if (stageCover) {
+        var content = stageCover.querySelector('.cover-content');
+        if (content) {
+          content.style.clipPath = 'none';
+          content.style.webkitClipPath = 'none';
+        }
+      }
+    }, 1400);
+  }
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () {
+      setTimeout(revealCoverSection, 60);
+    }).catch(revealCoverSection);
+    setTimeout(revealCoverSection, 700);
+  } else {
+    setTimeout(revealCoverSection, 120);
   }
 
   var progressBar = document.getElementById('progressBar');
   var progressIndicator = document.getElementById('progressIndicator');
 
-  var weddingMusic = document.getElementById('weddingMusic');
   var musicToggleBtn = document.getElementById('musicToggleBtn');
 
-  var MUTE_KEY = 'rn_wedding_muted';
   var VOLUME = 0.55;
   var fadeTimer = null;
   var musicStarted = false;
-
-  function storedMute() {
-    try { return window.localStorage.getItem(MUTE_KEY) === '1'; } catch (e) { return false; }
-  }
-  function rememberMute(muted) {
-    try { window.localStorage.setItem(MUTE_KEY, muted ? '1' : '0'); } catch (e) {}
-  }
+  var musicStarting = false;
+  var userMuted = false;
+  var audioUnlocked = false;
+  var shouldPlayMusic = false;
 
   function fadeTo(target, ms, done) {
     window.clearInterval(fadeTimer);
-    var from = weddingMusic ? weddingMusic.volume : 0;
+    if (!weddingMusic) return;
+    if (!ms || ms <= 0) {
+      weddingMusic.volume = target;
+      if (done) done();
+      return;
+    }
+    var from = weddingMusic.volume;
     var start = Date.now();
     fadeTimer = window.setInterval(function () {
-      if (!weddingMusic) return;
-      var t = Math.min(1, (Date.now() - start) / ms);
+      if (!weddingMusic) {
+        window.clearInterval(fadeTimer);
+        return;
+      }
+      var elapsed = Date.now() - start;
+      var t = Math.min(1, elapsed / ms);
       weddingMusic.volume = Math.max(0, Math.min(1, from + (target - from) * t));
       if (t >= 1) {
         window.clearInterval(fadeTimer);
+        weddingMusic.volume = target;
         if (done) done();
       }
-    }, 40);
+    }, 30);
   }
 
   function setMusicButtonState(muted) {
     if (!musicToggleBtn) return;
-    musicToggleBtn.classList.toggle('muted', muted);
+    musicToggleBtn.classList.toggle('muted', !!muted);
     musicToggleBtn.setAttribute('aria-label', muted ? 'Turn the music on' : 'Turn the music off');
   }
 
-  function startMusic() {
-    if (!weddingMusic || musicStarted) return;
-    musicStarted = true;
-    if (storedMute()) {
-      setMusicButtonState(true);
-      return;
-    }
-    weddingMusic.volume = 0;
-    var played = weddingMusic.play();
-    if (played && played.catch) {
-      played.catch(function () {
-        musicStarted = false;
-        setMusicButtonState(true);
-      });
-    }
-    fadeTo(VOLUME, 1500);
-    setMusicButtonState(false);
-  }
+  setMusicButtonState(false);
 
-  if (musicToggleBtn && weddingMusic) {
-    setMusicButtonState(storedMute());
-    musicToggleBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var muted = musicToggleBtn.classList.contains('muted') || weddingMusic.paused;
-      if (muted) {
-        weddingMusic.play();
-        fadeTo(VOLUME, 700);
+  // Audio events
+  if (weddingMusic) {
+    weddingMusic.addEventListener('playing', function () {
+      if (shouldPlayMusic && !userMuted) {
+        musicStarted = true;
         setMusicButtonState(false);
-        rememberMute(false);
-      } else {
-        fadeTo(0, 450, function () { weddingMusic.pause(); });
+      }
+    });
+    weddingMusic.addEventListener('pause', function () {
+      if (userMuted) {
         setMusicButtonState(true);
-        rememberMute(true);
       }
     });
   }
 
-  function tryFirstInteractionMusic() {
-    if (!musicStarted && !storedMute()) {
+  // Audio unlock
+  function unlockAudioOnFirstTouch() {
+    if (audioUnlocked || !weddingMusic || musicStarted || userMuted) return;
+
+    if (shouldPlayMusic) {
       startMusic();
+      return;
     }
-    if (musicStarted) {
-      window.removeEventListener('click', tryFirstInteractionMusic);
-      window.removeEventListener('touchstart', tryFirstInteractionMusic);
+
+    weddingMusic.volume = 0;
+    var p = weddingMusic.play();
+    if (p !== undefined && p.then) {
+      p.then(function () {
+        audioUnlocked = true;
+        if (shouldPlayMusic && !userMuted) {
+          musicStarted = true;
+          fadeTo(VOLUME, 900);
+          setMusicButtonState(false);
+        } else {
+          weddingMusic.volume = 0;
+        }
+      }).catch(function () {
+        audioUnlocked = false;
+      });
     }
   }
-  window.addEventListener('click', tryFirstInteractionMusic, { passive: true });
-  window.addEventListener('touchstart', tryFirstInteractionMusic, { passive: true });
+
+  function startMusic() {
+    shouldPlayMusic = true;
+    if (!weddingMusic || userMuted) return;
+
+    setMusicButtonState(false);
+
+    if (musicStarted) {
+      if (weddingMusic.paused) {
+        weddingMusic.play().catch(function () {});
+      }
+      if (weddingMusic.volume < VOLUME) {
+        fadeTo(VOLUME, 800);
+      }
+      return;
+    }
+
+    if (!weddingMusic.paused) {
+      try { weddingMusic.currentTime = 0; } catch (e) {}
+      audioUnlocked = true;
+      musicStarted = true;
+      musicStarting = false;
+      fadeTo(VOLUME, 900);
+      setMusicButtonState(false);
+      return;
+    }
+
+    if (musicStarting) return;
+    musicStarting = true;
+
+    weddingMusic.volume = 0;
+    var p = weddingMusic.play();
+    if (p !== undefined && p.then) {
+      p.then(function () {
+        audioUnlocked = true;
+        musicStarted = true;
+        musicStarting = false;
+        fadeTo(VOLUME, 900);
+        setMusicButtonState(false);
+      }).catch(function () {
+        musicStarted = false;
+        musicStarting = false;
+        setMusicButtonState(true);
+      });
+    } else {
+      musicStarted = true;
+      musicStarting = false;
+      weddingMusic.volume = VOLUME;
+      setMusicButtonState(false);
+    }
+  }
+
+  if (musicToggleBtn && weddingMusic) {
+    musicToggleBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var isAudioActive = !weddingMusic.paused && weddingMusic.volume > 0.05 && !userMuted;
+      if (isAudioActive) {
+        userMuted = true;
+        musicStarted = false;
+        setMusicButtonState(true);
+        fadeTo(0, 300, function () {
+          weddingMusic.pause();
+        });
+      } else {
+        userMuted = false;
+        shouldPlayMusic = true;
+        setMusicButtonState(false);
+        weddingMusic.volume = 0;
+        weddingMusic.play().then(function () {
+          audioUnlocked = true;
+          musicStarted = true;
+          fadeTo(VOLUME, 600);
+        }).catch(function () {
+          setMusicButtonState(true);
+        });
+      }
+    });
+  }
+
+  // Gestures
+  function onUserActivationGesture() {
+    if (userMuted) return;
+    if (shouldPlayMusic) {
+      if (weddingMusic && (weddingMusic.paused || weddingMusic.volume < 0.05)) {
+        startMusic();
+      }
+    } else if (!audioUnlocked) {
+      unlockAudioOnFirstTouch();
+    }
+  }
+
+  ['touchstart', 'touchend', 'pointerdown', 'mousedown', 'click', 'keydown'].forEach(function (ev) {
+    window.addEventListener(ev, onUserActivationGesture, { passive: true, capture: true });
+  });
 
   var INVOCATION = '॥ श्री गणेशाय नमः ॥';
   var SHLOKA_1 = 'वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ ।';
@@ -246,20 +378,20 @@
     var h = mainScroller.clientHeight || window.innerHeight;
     var targetTop = (targetSec - 1) * h;
     
-    // Balanced royal scroll duration
     var isMobile = window.innerWidth <= 600;
     var duration = targetSec === 2 ? (isMobile ? 1400 : 1350) : (isMobile ? 1200 : 1050); 
 
-    // Prevent immediate double-advance while transitioning to section 2
     if (targetSec === 2) {
       section2UnlockedAt = Date.now() + duration + 200;
+      startMusic();
     }
 
     smoothScrollTo(mainScroller, targetTop, duration, function () {
       if (targetSec === 2) {
         minAllowedTop = h;
-        section2UnlockedAt = Date.now() + 200; // Brief settle cooldown
+        section2UnlockedAt = Date.now() + 200;
         if (musicToggleBtn) musicToggleBtn.classList.add('is-active');
+        startMusic();
         if (stageLanding) {
           stageLanding.style.opacity = '1';
           stageLanding.style.pointerEvents = 'auto';
@@ -270,6 +402,7 @@
       } else if (targetSec === 3) {
         minAllowedTop = h * 2;
         if (musicToggleBtn) musicToggleBtn.classList.add('is-active');
+        startMusic();
         if (sectionInvitation) {
           sectionInvitation.style.opacity = '1';
           sectionInvitation.style.clipPath = 'none';
@@ -299,6 +432,15 @@
     });
   }
 
+  if (stageCover && mainScroller) {
+    stageCover.addEventListener('click', function (e) {
+      if (minAllowedTop === 0 && (!mainScroller || mainScroller.scrollTop < 20)) {
+        startMusic();
+        advanceToSection(2);
+      }
+    });
+  }
+
   if (cueToSection3 && mainScroller) {
     cueToSection3.addEventListener('click', function (e) {
       e.stopPropagation();
@@ -316,6 +458,7 @@
   var touchStartSection = 1;
   if (mainScroller) {
     mainScroller.addEventListener('touchstart', function (e) {
+      unlockAudioOnFirstTouch();
       if (e.touches && e.touches.length) {
         touchStartY = e.touches[0].clientY;
         var h = mainScroller ? mainScroller.clientHeight : 0;
@@ -329,7 +472,6 @@
       var deltaY = curY - touchStartY;
       var h = mainScroller ? mainScroller.clientHeight : 0;
 
-      // Section 3: Allow free native momentum scrolling inside invitationReel
       if (h > 0 && minAllowedTop >= h * 2) {
         return;
       }
@@ -339,13 +481,12 @@
         return;
       }
 
-      // Section 1 -> 2: Small swipe initiates Section 2
+      // Section 1-2
       if (touchStartSection === 1 && minAllowedTop === 0 && deltaY < -8 && !isAutoScrolling) {
         if (e.cancelable) e.preventDefault();
         startMusic();
         advanceToSection(2);
         return;
-      // Section 2 -> 3: Sensitive to any small scroll / swipe
       } else if (touchStartSection === 2 && h > 0 && minAllowedTop === h) {
         if (deltaY < -6) {
           if (e.cancelable) e.preventDefault();
@@ -361,6 +502,10 @@
     }, { passive: false });
 
     mainScroller.addEventListener('touchend', function () {
+      if (shouldPlayMusic && !userMuted) {
+        startMusic();
+      }
+
       var h = mainScroller ? mainScroller.clientHeight : 0;
       if (h > 0 && minAllowedTop === h && !isAutoScrolling && Date.now() >= section2UnlockedAt) {
         if (mainScroller.scrollTop > h + 4) {
@@ -374,14 +519,11 @@
     var delta = e.deltaY;
     var h = mainScroller ? mainScroller.clientHeight : 0;
 
-    // SECTION 3: Allow free scrolling up and down inside invitationReel
     if (h > 0 && minAllowedTop >= h * 2) {
       if (!invitationReel) return;
       if (invitationReel.contains(e.target)) {
-        // Pointer is inside the reel: let the browser scroll natively and freely!
         return;
       }
-      // Pointer is outside the card: forward the wheel to invitationReel so user can scroll anywhere
       var step = delta;
       if (e.deltaMode === 1) step *= 16;
       else if (e.deltaMode === 2) step *= invitationReel.clientHeight;
@@ -400,7 +542,7 @@
       return;
     }
 
-    // SECTION 1: Small wheel down triggers Section 2
+    // Wheel
     if (minAllowedTop === 0) {
       if (delta > 0) {
         if (e.cancelable) e.preventDefault();
@@ -410,7 +552,6 @@
       return;
     }
 
-    // SECTION 2: Small wheel down triggers Section 3 smoothly
     if (h > 0 && minAllowedTop === h) {
       if (delta > 0) {
         if (e.cancelable) e.preventDefault();
@@ -427,7 +568,6 @@
   window.addEventListener('keydown', function (e) {
     var h = mainScroller ? mainScroller.clientHeight : 0;
 
-    // SECTION 3: Keyboard controls invitationReel freely
     if (h > 0 && minAllowedTop >= h * 2 && invitationReel) {
       var page = invitationReel.clientHeight * 0.82;
       if (e.key === 'ArrowDown') { invitationReel.scrollTop += 64; e.preventDefault(); }
@@ -472,13 +612,11 @@
       top = minAllowedTop;
     }
 
-    // Safety auto-snap: If user scrolled past section 2 by even a tiny bit, immediately advance to section 3
     if (minAllowedTop === h && top > h + 5 && !isAutoScrolling && Date.now() >= section2UnlockedAt) {
       advanceToSection(3);
       return;
     }
 
-    // --- TRANSITION FROM SECTION 1 to SECTION 2 ---
     if (top <= h) {
       var p = Math.min(1, Math.max(0, top / h));
 
@@ -501,7 +639,6 @@
         cueToSection2.style.pointerEvents = cueOp1 > 0.1 ? 'auto' : 'none';
       }
 
-      // SECTION 1 -> 2: Same Elegant Curtain Wipe & Fade as Section 3
       if (p <= 0.40) {
         var pCover = p / 0.40;
         var wipeCover = (pCover * 100).toFixed(2);
@@ -555,8 +692,11 @@
       }
 
       if (musicToggleBtn) {
-        if (p >= 0.20 || minAllowedTop >= h) {
+        if (p >= 0.15 || minAllowedTop >= h) {
           musicToggleBtn.classList.add('is-active');
+          if (!musicStarted && !userMuted) {
+            startMusic();
+          }
         } else if (minAllowedTop === 0 && p < 0.10) {
           musicToggleBtn.classList.remove('is-active');
         }
@@ -564,11 +704,9 @@
 
       if (p >= 0.96 && !typewriterStarted) {
         startTypewriterSequence();
-        startMusic();
       }
 
     } else {
-      // --- TRANSITION FROM SECTION 2 to SECTION 3 ---
       var p2 = Math.min(1, Math.max(0, (top - h) / h));
 
       if (stageCover) {
@@ -588,7 +726,6 @@
         cueToSection3.style.pointerEvents = 'none';
       }
 
-      // Section 2: Gracefully wipe and fade upward
       if (p2 <= 0.45) {
         var pOut = p2 / 0.45;
         var wipeOut = (pOut * 100).toFixed(2);
@@ -604,7 +741,6 @@
         stageLanding.style.webkitClipPath = 'inset(0 0 100% 0)';
       }
 
-      // Section 3: Unveils seamlessly with overlap (no empty void gap)
       if (p2 >= 0.10) {
         var pIn = Math.min(1, (p2 - 0.10) / 0.90);
         var wipeIn = ((1 - pIn) * 100).toFixed(2);
@@ -671,7 +807,6 @@
     var reelH = invitationReel.clientHeight;
     if (reelH <= 0 || !shrinkElements.length) return;
     var reelRect = invitationReel.getBoundingClientRect();
-    // 25% Top Fade Zone Threshold - fully responsive to any screen height
     var fadeThreshold = reelH * 0.25;
 
     for (var i = 0; i < shrinkElements.length; i++) {
@@ -680,12 +815,10 @@
       var elTop = rect.top - reelRect.top;
 
       if (elTop < fadeThreshold) {
-        // Enters the top fade zone: smoothly shrink down similar to Ganpati logo
         var p = (fadeThreshold - elTop) / (fadeThreshold * 0.88);
         if (p < 0) p = 0;
         if (p > 1) p = 1;
 
-        // Shrink by 12% as it ascends through the fade, with subtle upward float
         var scale = 1 - 0.12 * p;
         var shift = -6 * p;
         el.style.transform = 'translate3d(0,' + shift.toFixed(1) + 'px,0) scale(' + scale.toFixed(3) + ')';
