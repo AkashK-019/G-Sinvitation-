@@ -320,6 +320,14 @@
       stageCover.style.visibility = 'hidden';
       stageCover.classList.add('is-hidden');
     }
+    if (cueToSection2) {
+      cueToSection2.classList.add('is-hidden');
+      cueToSection2.classList.remove('is-revealed');
+      cueToSection2.style.display = 'none';
+      cueToSection2.style.visibility = 'hidden';
+      cueToSection2.style.opacity = '0';
+      cueToSection2.style.pointerEvents = 'none';
+    }
 
     var chars1 = getGraphemes(SHLOKA_1);
     var chars2 = getGraphemes(SHLOKA_2);
@@ -439,6 +447,11 @@
 
     if (targetSec === 2) {
       if (cueToSection2) {
+        cueToSection2.classList.add('is-hidden');
+        cueToSection2.classList.remove('is-revealed');
+        cueToSection2.style.display = 'none';
+        cueToSection2.style.visibility = 'hidden';
+        cueToSection2.style.opacity = '0';
         cueToSection2.style.pointerEvents = 'none';
       }
       section2UnlockedAt = Date.now() + duration + 200;
@@ -451,6 +464,14 @@
         section2UnlockedAt = Date.now() + 200;
         if (musicToggleBtn) musicToggleBtn.classList.add('is-active');
         startMusic();
+        if (cueToSection2) {
+          cueToSection2.classList.add('is-hidden');
+          cueToSection2.classList.remove('is-revealed');
+          cueToSection2.style.display = 'none';
+          cueToSection2.style.visibility = 'hidden';
+          cueToSection2.style.opacity = '0';
+          cueToSection2.style.pointerEvents = 'none';
+        }
         if (stageCover) {
           stageCover.style.opacity = '0';
           stageCover.style.pointerEvents = 'none';
@@ -493,6 +514,14 @@
       if (e) {
         e.stopPropagation();
         if (e.cancelable) e.preventDefault();
+      }
+      if (cueToSection2) {
+        cueToSection2.classList.add('is-hidden');
+        cueToSection2.classList.remove('is-revealed');
+        cueToSection2.style.display = 'none';
+        cueToSection2.style.visibility = 'hidden';
+        cueToSection2.style.opacity = '0';
+        cueToSection2.style.pointerEvents = 'none';
       }
       startMusic();
       advanceToSection(2);
@@ -704,13 +733,20 @@
       }
 
       if (cueToSection2) {
-        var cueOp1 = Math.max(0, 1 - p * 3);
-        cueToSection2.style.opacity = cueOp1.toFixed(3);
-        cueToSection2.style.pointerEvents = cueOp1 > 0.1 ? 'auto' : 'none';
-        if (p >= 0.95) {
+        if (minAllowedTop >= h || p >= 0.08) {
+          cueToSection2.classList.add('is-hidden');
+          cueToSection2.classList.remove('is-revealed');
+          cueToSection2.style.opacity = '0';
           cueToSection2.style.display = 'none';
+          cueToSection2.style.visibility = 'hidden';
+          cueToSection2.style.pointerEvents = 'none';
         } else {
-          cueToSection2.style.display = 'inline-flex';
+          var cueOp1 = Math.max(0, 1 - p * 6);
+          cueToSection2.classList.remove('is-hidden');
+          cueToSection2.style.opacity = cueOp1.toFixed(3);
+          cueToSection2.style.pointerEvents = cueOp1 > 0.5 ? 'auto' : 'none';
+          cueToSection2.style.display = cueOp1 > 0.05 ? 'inline-flex' : 'none';
+          cueToSection2.style.visibility = cueOp1 > 0.05 ? 'visible' : 'hidden';
         }
       }
 
@@ -799,6 +835,15 @@
 
     } else {
       var p2 = Math.min(1, Math.max(0, (top - h) / h));
+
+      if (cueToSection2) {
+        cueToSection2.classList.add('is-hidden');
+        cueToSection2.classList.remove('is-revealed');
+        cueToSection2.style.display = 'none';
+        cueToSection2.style.visibility = 'hidden';
+        cueToSection2.style.opacity = '0';
+        cueToSection2.style.pointerEvents = 'none';
+      }
 
       if (stageCover) {
         stageCover.style.opacity = '0';

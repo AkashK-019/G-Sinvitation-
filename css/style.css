@@ -48,6 +48,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
 .stage-cover .cover-content { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; max-width: 90%; will-change: opacity, clip-path; opacity: 0; clip-path: inset(0 0 100% 0); -webkit-clip-path: inset(0 0 100% 0); transition: opacity 1.15s cubic-bezier(0.22, 1, 0.36, 1), clip-path 1.15s cubic-bezier(0.22, 1, 0.36, 1), -webkit-clip-path 1.15s cubic-bezier(0.22, 1, 0.36, 1); }
 .enter-ceremony-btn { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .75s ease .35s, transform .25s ease; }
 .enter-ceremony-btn.is-revealed { opacity: 1; visibility: visible; pointer-events: auto !important; }
+.enter-ceremony-btn.is-hidden { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
 .stage-cover .scroll-cue-btn { opacity: 0; pointer-events: none; transition: opacity .75s ease .35s, transform .25s ease; }
 .stage-cover.is-revealed .cover-content { opacity: 1; clip-path: inset(0 0 0% 0); -webkit-clip-path: inset(0 0 0% 0); }
 .stage-cover.is-revealed .scroll-cue-btn { opacity: 1; pointer-events: auto; }
