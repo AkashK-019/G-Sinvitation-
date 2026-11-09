@@ -7,7 +7,7 @@
     var cleanGuest = decodeURIComponent(guest).trim();
     var personalizedBadge = document.getElementById('personalizedBadge');
     if (personalizedBadge) {
-      personalizedBadge.textContent = 'Special Invitation for ' + cleanGuest;
+      personalizedBadge.textContent = cleanGuest + ' यांच्यासाठी सस्नेह निमंत्रण';
       personalizedBadge.style.display = 'inline-block';
     }
   }
@@ -98,6 +98,13 @@
       bgImg.src = 'https://ik.imagekit.io/greenspire/invitation/main-bg.avif';
     }));
 
+    promises.push(new Promise(function (resolve) {
+      var calImg = new Image();
+      calImg.onload = resolve;
+      calImg.onerror = resolve;
+      calImg.src = 'assets/couple-calligraphy.webp?v=6';
+    }));
+
     Promise.all(promises).then(revealCoverSection).catch(revealCoverSection);
 
     setTimeout(revealCoverSection, 3500);
@@ -147,7 +154,7 @@
   function setMusicButtonState(muted) {
     if (!musicToggleBtn) return;
     musicToggleBtn.classList.toggle('muted', !!muted);
-    musicToggleBtn.setAttribute('aria-label', muted ? 'Turn the music on' : 'Turn the music off');
+    musicToggleBtn.setAttribute('aria-label', muted ? 'संगीत चालू करा' : 'संगीत बंद करा');
   }
 
   setMusicButtonState(false);
