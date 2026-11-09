@@ -889,6 +889,15 @@
     var ratio = max > 0 ? invitationReel.scrollTop / max : 0;
     progressIndicator.style.height = (ratio * 100).toFixed(1) + '%';
 
+    var cueSection3Scroll = document.getElementById('cueSection3Scroll');
+    if (cueSection3Scroll) {
+      if (invitationReel.scrollTop > 18) {
+        cueSection3Scroll.classList.add('is-hidden');
+      } else {
+        cueSection3Scroll.classList.remove('is-hidden');
+      }
+    }
+
     if (!shrinkElements) {
       shrinkElements = invitationReel.querySelectorAll(
         '.invitation-crest, .hero-eyebrow, .hero-names, .hero-line, .ceremony-title, ' +
@@ -940,6 +949,13 @@
     window.addEventListener('resize', function () {
       updateProgress();
     }, { passive: true });
+  }
+
+  var cueSection3Scroll = document.getElementById('cueSection3Scroll');
+  if (cueSection3Scroll && invitationReel) {
+    cueSection3Scroll.addEventListener('click', function () {
+      invitationReel.scrollBy({ top: 220, behavior: 'smooth' });
+    });
   }
 
 })(window, document);
