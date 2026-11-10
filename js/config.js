@@ -47,7 +47,7 @@ const WEDDING_CONFIG = {
       location: "D' Rajwada Resort & Banquet Hall, Boisar",
       dressCode: "पारंपरिक पोशाख",
       colors: ["#631622", "#D4AF37", "#FAF7F2", "#8B1E2F"],
-      desc: "पवित्र मंगलाष्टके, सप्तपदी आणि नवदांपत्यास शुभाशीर्वाद."
+      desc: "पवित्र मंगलाष्टके, सप्तपदी आणि नवदांपत्यास शुभाशिर्वाद."
     },
     {
       title: "स्नेहभोजन",
