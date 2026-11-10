@@ -59,18 +59,16 @@
         cueToSection2.classList.add('is-revealed');
       }
 
-      setTimeout(revealCoverDate, 700);
-
-      setTimeout(function () {
-        if (stageCover) {
-          var content = stageCover.querySelector('.cover-content');
-          if (content) {
-            content.style.clipPath = 'none';
-            content.style.webkitClipPath = 'none';
-          }
+      if (stageCover) {
+        var content = stageCover.querySelector('.cover-content');
+        if (content) {
+          content.style.clipPath = 'none';
+          content.style.webkitClipPath = 'none';
         }
-      }, 1400);
-    }, 180);
+      }
+
+      setTimeout(revealCoverDate, 550);
+    }, 120);
   }
 
   function waitForCoverAssetsAndFonts() {
@@ -79,9 +77,9 @@
     if (document.fonts && document.fonts.load) {
       promises.push(
         Promise.all([
-          document.fonts.load('800 4rem "Noto Serif Devanagari"').catch(function () {}),
-          document.fonts.load('400 4rem "Rozha One"').catch(function () {}),
-          document.fonts.load('400 4rem "Yatra One"').catch(function () {}),
+          document.fonts.load('800 1.5rem "Noto Serif Devanagari"', '॥ शुभविवाह निमंत्रण ॥').catch(function () {}),
+          document.fonts.load('600 1.1rem "Noto Serif Devanagari"', 'आयुष्याच्या नव्या पर्वाला सुरुवात करताना, आपल्या स्नेहपूर्ण उपस्थितीने व शुभाशीर्वादांनी हा मंगल सोहळा अधिक संस्मरणीय करावा, ही नम्र विनंती. ०५ · १२ · २०२६').catch(function () {}),
+          document.fonts.load('700 1.2rem "Noto Serif Devanagari"', '॥ श्री गणेशाय नमः ॥').catch(function () {}),
           document.fonts.load('700 1rem "Cinzel"').catch(function () {}),
           document.fonts.load('600 1rem "Cinzel"').catch(function () {}),
           document.fonts.load('italic 500 1rem "Cormorant Garamond"').catch(function () {})
@@ -107,7 +105,7 @@
 
     Promise.all(promises).then(revealCoverSection).catch(revealCoverSection);
 
-    setTimeout(revealCoverSection, 3500);
+    setTimeout(revealCoverSection, 2500);
   }
 
   waitForCoverAssetsAndFonts();

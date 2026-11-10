@@ -16,7 +16,7 @@
   --display: 'Cinzel Decorative', 'Cinzel', serif;
   --cinzel:  'Cinzel', serif;
   --script:  'Great Vibes', cursive;
-  --deva:    'Tiro Devanagari Marathi', 'Noto Serif Devanagari', 'Nirmala UI', serif;
+  --deva:    'Noto Serif Devanagari', 'Tiro Devanagari Marathi', 'Kohinoor Devanagari', 'Noto Sans Devanagari', 'Mukta', 'Nirmala UI', system-ui, -apple-system, sans-serif;
   --ratio: 1.7778;
   --cw: min(92vw, 440px, calc((100vh - 2rem) / 1.7778));
 }
@@ -45,15 +45,15 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
 .stage-view { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; box-sizing: border-box; width: 100%; height: 100%; will-change: opacity, clip-path; }
 .stage-cover { justify-content: center; padding: 3.2rem 1.6rem 3.5rem; z-index: 3; }
 .stage-cover.is-hidden { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
-.stage-cover .cover-content { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; max-width: 90%; will-change: opacity, clip-path; opacity: 0; clip-path: inset(0 0 100% 0); -webkit-clip-path: inset(0 0 100% 0); transition: opacity 1.15s cubic-bezier(0.22, 1, 0.36, 1), clip-path 1.15s cubic-bezier(0.22, 1, 0.36, 1), -webkit-clip-path 1.15s cubic-bezier(0.22, 1, 0.36, 1); }
+.stage-cover .cover-content { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; max-width: 90%; will-change: opacity, transform; opacity: 0; transform: translateY(6px); clip-path: none !important; -webkit-clip-path: none !important; transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1), transform 0.85s cubic-bezier(0.22, 1, 0.36, 1); }
 .enter-ceremony-btn { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .75s ease .35s, transform .25s ease; }
 .enter-ceremony-btn.is-revealed { opacity: 1; visibility: visible; pointer-events: auto !important; }
 .enter-ceremony-btn.is-hidden { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
 .stage-cover .scroll-cue-btn { opacity: 0; pointer-events: none; transition: opacity .75s ease .35s, transform .25s ease; }
-.stage-cover.is-revealed .cover-content { opacity: 1; clip-path: inset(0 0 0% 0); -webkit-clip-path: inset(0 0 0% 0); }
+.stage-cover.is-revealed .cover-content { opacity: 1; transform: translateY(0); clip-path: none !important; -webkit-clip-path: none !important; }
 .stage-cover.is-revealed .scroll-cue-btn { opacity: 1; pointer-events: auto; }
 
-.cover-header-title { font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Marathi', serif !important; font-weight: 800 !important; font-size: clamp(1.15rem, 4.6cqw, 1.55rem); letter-spacing: 0.03em !important; word-spacing: normal !important; text-transform: none !important; text-rendering: optimizeLegibility; font-feature-settings: "kern" 1, "liga" 1, "clig" 1; color: #631622 !important; white-space: nowrap; margin-top: clamp(0.6rem, 2.5vh, 1.2rem); margin-bottom: clamp(0.4rem, 1.5vh, 0.8rem); text-align: center; text-shadow: 0 1px 3px rgba(255, 255, 255, 0.95), 0 0 12px rgba(255, 255, 255, 0.9); }
+.cover-header-title { font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Marathi', 'Kohinoor Devanagari', 'Noto Sans Devanagari', 'Mukta', 'Nirmala UI', system-ui, -apple-system, sans-serif !important; font-weight: 800 !important; font-size: clamp(1.15rem, 4.6cqw, 1.55rem); letter-spacing: 0 !important; word-spacing: normal !important; text-transform: none !important; text-rendering: optimizeLegibility; font-feature-settings: "kern" 1, "liga" 1, "clig" 1; color: #631622 !important; white-space: nowrap; line-height: 1.35 !important; padding-top: 0.2rem !important; margin-top: clamp(0.5rem, 2.2vh, 1.1rem); margin-bottom: clamp(0.4rem, 1.5vh, 0.8rem); text-align: center; text-shadow: 0 1px 3px rgba(255, 255, 255, 0.95), 0 0 12px rgba(255, 255, 255, 0.9); overflow: visible !important; }
 
 .cover-names-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: clamp(0.55rem, 1.8vh, 1.2rem); margin-bottom: clamp(0.45rem, 2.0cqw, 1.0rem); padding: 0.2rem 0; position: relative; width: 100%; }
 .cover-calligraphy-picture { display: flex; justify-content: center; align-items: center; width: 100%; }
@@ -61,7 +61,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
 .script-title-name { font-family: 'Italianno', cursive; font-size: clamp(3.4rem, 14.5cqw, 5.4rem); color: #16221E; font-weight: 400; line-height: 0.96; letter-spacing: 0.02em; margin: 0; text-align: center; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.95); display: block; }
-.script-title-name.marathi-name { font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Marathi', serif !important; font-weight: 800; font-size: clamp(2.15rem, 8.5cqw, 3.2rem); line-height: 1.25; letter-spacing: 0 !important; text-rendering: optimizeLegibility; font-feature-settings: "kern" 1, "liga" 1, "clig" 1; }
+.script-title-name.marathi-name { font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Marathi', 'Kohinoor Devanagari', 'Noto Sans Devanagari', 'Mukta', 'Nirmala UI', system-ui, -apple-system, sans-serif !important; font-weight: 800; font-size: clamp(2.15rem, 8.5cqw, 3.2rem); line-height: 1.25; letter-spacing: 0 !important; text-rendering: optimizeLegibility; font-feature-settings: "kern" 1, "liga" 1, "clig" 1; }
 
 .groom-cross { transform: none; }
 .bride-cross { transform: none; }
@@ -74,7 +74,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
 
 .cover-tagline-text { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: clamp(1.2rem, 3.2cqw, 1.6rem); gap: 0.15rem; }
 .cover-tagline-text p { font-family: var(--serif); font-style: italic; font-size: clamp(0.96rem, 3.8cqw, 1.22rem); color: #241A16; line-height: 1.44; margin: 0; font-weight: 500; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9); }
-.cover-tagline-text.devanagari p { font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Marathi', serif !important; font-style: normal !important; font-size: clamp(1.05rem, 3.8cqw, 1.24rem) !important; color: #381A1E !important; font-weight: 600 !important; line-height: 1.65 !important; letter-spacing: 0.015em !important; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.95); }
+.cover-tagline-text.devanagari p { font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Marathi', 'Kohinoor Devanagari', 'Noto Sans Devanagari', 'Mukta', 'Nirmala UI', system-ui, -apple-system, sans-serif !important; font-style: normal !important; font-size: clamp(1.05rem, 3.8cqw, 1.24rem) !important; color: #381A1E !important; font-weight: 600 !important; line-height: 1.65 !important; letter-spacing: 0 !important; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.95); }
 
 .cover-date-section { display: flex; align-items: center; justify-content: center; width: 100%; max-width: 90%; gap: 0.7rem; opacity: 0; transform: translateY(14px) scale(0.96); transition: opacity 1.0s cubic-bezier(0.22, 1, 0.36, 1), transform 1.0s cubic-bezier(0.22, 1, 0.36, 1); }
 .cover-date-section.is-revealed { opacity: 1; transform: translateY(0) scale(1); }
@@ -92,7 +92,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
 .lotus-divider { width: clamp(115px, 34cqw, 160px); margin-top: 0; margin-bottom: 0; flex-shrink: 0; }
 .lotus-divider img { width: 100%; height: auto; filter: drop-shadow(0 1px 2px rgba(124, 88, 26, 0.22)); }
 .shloka-box { height: 3.8rem; min-height: 3.8rem; margin: 0.5rem auto; display: block; text-align: center; position: relative; padding: 0 .4rem; flex-shrink: 0; }
-.shloka-text { height: 1.55em; font-size: clamp(1.05rem, 4.2cqw, 1.35rem); color: #6B4E1B; font-weight: 700; line-height: 1.55; letter-spacing: .04em; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.95); margin: 0; white-space: nowrap; display: block; }
+.shloka-text { height: 1.55em; font-size: clamp(1.05rem, 4.2cqw, 1.35rem); color: #6B4E1B; font-weight: 700; line-height: 1.55; letter-spacing: 0 !important; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.95); margin: 0; white-space: nowrap; display: block; }
 .type-cursor { font-family: var(--deva); font-size: clamp(.92rem, 3.6cqw, 1.22rem); color: var(--maroon-deep); font-weight: 700; display: none; margin-left: 2px; opacity: 0; visibility: hidden; }
 .type-cursor.is-typing { display: inline-block; opacity: 1; visibility: visible; animation: cursorBlink .8s infinite; }
 .type-cursor.done { display: none; opacity: 0; visibility: hidden; animation: none; }
@@ -123,7 +123,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
 .invitation-crest { display: flex; flex-direction: column; align-items: center; transition: transform .15s ease, opacity .25s ease; z-index: 10; pointer-events: none; margin-top: -12px; margin-bottom: 0.15rem; }
 .invitation-ganpati { width: clamp(96px, 28cqw, 142px); }
 .invitation-ganpati img { width: 100%; height: auto; filter: drop-shadow(0 4px 14px rgba(122, 20, 36, 0.28)); }
-.crest-shree { font-size: clamp(1.06rem, 4.0cqw, 1.35rem); color: var(--maroon-deep); font-weight: 700; letter-spacing: .06em; line-height: 1.25; margin: .15rem 0 .05rem; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.95); }
+.crest-shree { font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Marathi', 'Kohinoor Devanagari', 'Noto Sans Devanagari', 'Mukta', 'Nirmala UI', system-ui, -apple-system, sans-serif !important; font-size: clamp(1.06rem, 4.0cqw, 1.35rem); color: var(--maroon-deep); font-weight: 800 !important; letter-spacing: 0 !important; line-height: 1.25; margin: .15rem 0 .05rem; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.95); }
 .invitation-lotus { width: clamp(115px, 34cqw, 160px); margin-top: 0; margin-bottom: 0; line-height: 1; }
 .invitation-lotus img { width: 100%; height: auto; filter: drop-shadow(0 1px 2px rgba(124, 88, 26, 0.22)); }
 
@@ -235,14 +235,14 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
   .app-viewport { padding: 0; }
   .card-frame { width: 100vw; height: 100vh; height: 100dvh; max-height: 100dvh; border-radius: 0; box-shadow: none; }
   .stage-cover { padding: clamp(0.2rem, 0.8vh, 0.5rem) 1.0rem clamp(1.8rem, 4vh, 2.5rem); }
-  .cover-header-title { font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Marathi', serif !important; font-size: clamp(1.15rem, 4.5vw, 1.38rem) !important; letter-spacing: 0.02em !important; word-spacing: normal !important; text-transform: none !important; text-rendering: optimizeLegibility; font-feature-settings: "kern" 1, "liga" 1, "clig" 1; font-weight: 800 !important; color: #631622 !important; margin-top: -0.25rem !important; margin-bottom: 0.35rem !important; }
+  .cover-header-title { font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Marathi', 'Kohinoor Devanagari', 'Noto Sans Devanagari', 'Mukta', 'Nirmala UI', system-ui, -apple-system, sans-serif !important; font-size: clamp(1.15rem, 4.5vw, 1.38rem) !important; letter-spacing: 0 !important; word-spacing: normal !important; text-transform: none !important; text-rendering: optimizeLegibility; font-feature-settings: "kern" 1, "liga" 1, "clig" 1; font-weight: 800 !important; color: #631622 !important; line-height: 1.35 !important; padding-top: 0.2rem !important; margin-top: 0 !important; margin-bottom: 0.35rem !important; overflow: visible !important; }
   .cover-names-wrap { margin-top: clamp(0.65rem, 1.8vh, 1.15rem) !important; margin-bottom: 0.55rem !important; padding: 0 !important; gap: 0 !important; }
   .cover-calligraphy-img { width: 100% !important; max-width: clamp(225px, 66vw, 280px) !important; max-height: min(24vh, 170px) !important; height: auto !important; transform: translateX(clamp(5px, 1.8vw, 10px)) !important; }
   .script-title-name.marathi-name { font-size: clamp(1.95rem, 7.8vw, 2.45rem) !important; line-height: 1.25 !important; letter-spacing: 0 !important; white-space: nowrap; }
   .script-amp-row { margin: 0.1rem 0 !important; max-width: 110px !important; }
   .script-amp-symbol.marathi-amp { font-size: 1.35rem !important; }
   .cover-tagline-text { margin-bottom: 0.85rem !important; gap: 0.14rem !important; }
-  .cover-tagline-text.devanagari p { font-size: clamp(1.04rem, 3.8vw, 1.16rem) !important; line-height: 1.62 !important; color: #44181E !important; }
+  .cover-tagline-text.devanagari p { font-size: clamp(1.04rem, 3.8vw, 1.16rem) !important; line-height: 1.62 !important; letter-spacing: 0 !important; color: #44181E !important; }
   .cover-date-section { max-width: 88% !important; gap: 0.55rem !important; margin-top: 0.35rem !important; }
   .date-clean-box { padding: 0.44rem 1.6rem !important; flex-shrink: 0 !important; white-space: nowrap !important; border: 1px solid rgba(201, 160, 72, 0.65) !important; background: rgba(255, 255, 255, 0.82) !important; }
   .date-clean-text { font-size: 1.12rem !important; letter-spacing: 0.16em !important; margin-left: 0.16em !important; white-space: nowrap !important; font-weight: 600 !important; }
@@ -256,8 +256,11 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
   .couple-card { width: clamp(270px, 84vw, 360px) !important; max-width: 92% !important; max-height: clamp(330px, 53vh, 450px) !important; margin: 0.55rem auto 0 !important; transform: translateY(clamp(4px, 1.2vh, 8px)) !important; overflow: visible !important; }
   .couple-card .couple-art { width: auto !important; max-width: 100% !important; max-height: clamp(330px, 53vh, 450px) !important; height: auto !important; filter: none !important; -webkit-mask-image: none !important; mask-image: none !important; }
   .scroll-cue-btn { bottom: 0.45rem !important; font-size: clamp(0.82rem, 3.2vw, 0.92rem) !important; white-space: nowrap !important; letter-spacing: 0.02em !important; z-index: 15 !important; text-shadow: 0 1px 3px rgba(255, 255, 255, 0.95), 0 0 10px rgba(255, 255, 255, 0.9) !important; }
-  .crest-shree { font-size: 1.02rem !important; }
-  .hero-eyebrow.devanagari { font-size: clamp(0.88rem, 3.65vw, 1.05rem) !important; letter-spacing: -0.01em !important; line-height: 1.6 !important; width: 100% !important; max-width: 100% !important; }
+  .invitation-reel-inner { padding-left: 0.65rem !important; padding-right: 0.65rem !important; }
+  .crest-shree { font-size: clamp(1.22rem, 4.8vw, 1.45rem) !important; font-weight: 800 !important; letter-spacing: 0 !important; margin: 0.2rem 0 0.1rem !important; }
+  .invitation-ganpati { width: clamp(84px, 24vw, 110px) !important; }
+  .invitation-lotus { width: clamp(110px, 32vw, 140px) !important; }
+  .hero-eyebrow.devanagari { font-size: clamp(0.98rem, 4.1vw, 1.20rem) !important; font-weight: 700 !important; letter-spacing: -0.01em !important; line-height: 1.62 !important; width: 100% !important; max-width: 100% !important; }
   .hero-eyebrow.devanagari .eyebrow-line { display: block !important; white-space: nowrap !important; text-align: center !important; }
   .hero-calligraphy-wrap { margin: 0.25rem 0 0.45rem !important; }
   .hero-calligraphy-img { max-width: clamp(180px, 56vw, 235px) !important; }
@@ -283,22 +286,23 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
 }
 
 @media (max-width: 600px) and (max-height: 720px) {
-  .cover-header-title { font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Marathi', serif !important; font-size: clamp(1.10rem, 4.2vw, 1.25rem) !important; letter-spacing: 0.02em !important; text-transform: none !important; margin-top: -0.25rem !important; margin-bottom: 0.25rem !important; font-weight: 800 !important; }
+  .cover-header-title { font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Marathi', 'Kohinoor Devanagari', 'Noto Sans Devanagari', 'Mukta', 'Nirmala UI', system-ui, -apple-system, sans-serif !important; font-size: clamp(1.10rem, 4.2vw, 1.25rem) !important; letter-spacing: 0 !important; text-transform: none !important; line-height: 1.35 !important; padding-top: 0.15rem !important; margin-top: 0 !important; margin-bottom: 0.25rem !important; font-weight: 800 !important; overflow: visible !important; }
   .cover-calligraphy-img { width: 100% !important; max-width: clamp(210px, 62vw, 255px) !important; max-height: min(22vh, 155px) !important; height: auto !important; }
   .cover-tagline-text { margin-bottom: 0.70rem !important; }
-  .cover-tagline-text.devanagari p { font-size: clamp(0.98rem, 3.5vw, 1.10rem) !important; line-height: 1.55 !important; }
+  .cover-tagline-text.devanagari p { font-size: clamp(0.98rem, 3.5vw, 1.10rem) !important; line-height: 1.55 !important; letter-spacing: 0 !important; }
   .cover-date-section { margin-top: 0.25rem !important; }
   .date-clean-box { padding: 0.40rem 1.5rem !important; }
   .date-clean-text { font-size: 1.05rem !important; }
   .couple-card { max-height: clamp(295px, 48vh, 350px) !important; width: min(285px, 86vw) !important; margin: 0.45rem auto 0 !important; transform: translateY(clamp(3px, 1.0vh, 6px)) !important; overflow: visible !important; }
   .couple-card .couple-art { max-height: clamp(295px, 48vh, 350px) !important; filter: none !important; -webkit-mask-image: none !important; mask-image: none !important; }
-  .hero-eyebrow.devanagari { font-size: clamp(0.82rem, 3.4vw, 0.96rem) !important; }
+  .crest-shree { font-size: clamp(1.15rem, 4.4vw, 1.35rem) !important; letter-spacing: 0 !important; }
+  .hero-eyebrow.devanagari { font-size: clamp(0.92rem, 3.8vw, 1.08rem) !important; }
 }
 
 @media (min-width: 601px) {
   :root { --cw: min(92vw, 470px, calc((100vh - 2rem) / 1.7778)); }
   .stage-cover { padding: 1.8rem 2.0rem 3.5rem; }
-  .cover-header-title { font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Marathi', serif !important; font-size: clamp(1.35rem, 5.2cqw, 1.70rem); letter-spacing: 0.03em !important; word-spacing: normal !important; text-transform: none !important; text-rendering: optimizeLegibility; font-feature-settings: "kern" 1, "liga" 1, "clig" 1; font-weight: 800; color: #631622; margin-top: 0.2rem; margin-bottom: 0.75rem; text-shadow: 0 1px 3px rgba(255, 255, 255, 0.95), 0 0 14px rgba(255, 255, 255, 0.9); }
+  .cover-header-title { font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Marathi', 'Kohinoor Devanagari', 'Noto Sans Devanagari', 'Mukta', 'Nirmala UI', system-ui, -apple-system, sans-serif !important; font-size: clamp(1.35rem, 5.2cqw, 1.70rem); letter-spacing: 0 !important; word-spacing: normal !important; text-transform: none !important; text-rendering: optimizeLegibility; font-feature-settings: "kern" 1, "liga" 1, "clig" 1; font-weight: 800; color: #631622; line-height: 1.35; padding-top: 0.2rem; margin-top: 0.2rem; margin-bottom: 0.75rem; text-shadow: 0 1px 3px rgba(255, 255, 255, 0.95), 0 0 14px rgba(255, 255, 255, 0.9); overflow: visible; }
   .cover-names-wrap { margin-top: 0.75rem; margin-bottom: 0.75rem; padding: 0.2rem 0; gap: 0; }
   .cover-calligraphy-img { max-width: clamp(230px, 60cqw, 290px); max-height: 175px; transform: translateX(clamp(6px, 1.8cqw, 10px)); }
   .script-title-name.marathi-name { font-size: clamp(2.25rem, 8.5cqw, 2.9rem); line-height: 1.22; letter-spacing: 0 !important; white-space: nowrap; }
@@ -315,9 +319,9 @@ button { cursor: pointer; border: none; background: none; font-family: var(--ser
   .ganpati-icon { width: clamp(96px, 28cqw, 142px); }
   .ganpati-title { font-size: clamp(1.15rem, 4.2cqw, 1.35rem); }
   .lotus-divider { width: clamp(115px, 34cqw, 160px); }
-  .shloka-text { font-size: clamp(1.05rem, 4.0cqw, 1.25rem); line-height: 1.6; white-space: nowrap; }
-  .crest-shree { font-size: 1.15rem; }
-  .hero-eyebrow.devanagari { font-size: clamp(1.08rem, 3.8cqw, 1.22rem); letter-spacing: 0.03em; line-height: 1.5; }
+  .shloka-text { font-size: clamp(1.05rem, 4.0cqw, 1.25rem); line-height: 1.6; white-space: nowrap; letter-spacing: 0 !important; }
+  .crest-shree { font-size: clamp(1.22rem, 4.2cqw, 1.45rem); letter-spacing: 0 !important; }
+  .hero-eyebrow.devanagari { font-size: clamp(1.12rem, 4.0cqw, 1.35rem); font-weight: 700; letter-spacing: -0.01em; line-height: 1.6; }
   .hero-calligraphy-wrap { margin: 0.45rem 0 0.65rem; }
   .hero-calligraphy-img { max-width: clamp(200px, 55cqw, 260px); }
   .hero-names.devanagari { font-size: clamp(2.18rem, 7.8cqw, 2.80rem); line-height: 1.25; letter-spacing: 0 !important; display: flex; flex-direction: column; align-items: center; }
