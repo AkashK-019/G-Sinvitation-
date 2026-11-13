@@ -36,9 +36,7 @@
 
   var weddingMusic = document.getElementById('weddingMusic');
 
-  if (weddingMusic && weddingMusic.load) {
-    try { weddingMusic.load(); } catch (e) {}
-  }
+  // Music will be initialized on first user gesture to preserve initial loading speed
 
   var coverDateSection = document.getElementById('coverDateSection');
   var isCoverRevealed = false;
@@ -67,8 +65,8 @@
         }
       }
 
-      setTimeout(revealCoverDate, 550);
-    }, 120);
+      setTimeout(revealCoverDate, 280);
+    }, 30);
   }
 
   function waitForCoverAssetsAndFonts() {
@@ -98,14 +96,16 @@
 
     promises.push(new Promise(function (resolve) {
       var calImg = new Image();
+      if (calImg.complete) { resolve(); return; }
       calImg.onload = resolve;
       calImg.onerror = resolve;
-      calImg.src = 'assets/couple-calligraphy.webp?v=6';
+      calImg.src = 'assets/couple-calligraphy.webp?v=21';
+      if (calImg.complete) { resolve(); }
     }));
 
     Promise.all(promises).then(revealCoverSection).catch(revealCoverSection);
 
-    setTimeout(revealCoverSection, 2500);
+    setTimeout(revealCoverSection, 400);
   }
 
   waitForCoverAssetsAndFonts();
